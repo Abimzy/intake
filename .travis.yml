@@ -11,8 +11,8 @@ addons:
 before_script: python ./manage.py collectstatic --noinput
 script:
   - pep8
-  - ./manage.py behave
-  - make test.coverage
+  - make test.coverage.keepdb
+  - ./manage.py behave --keepdb
 after_success:
   - codeclimate-test-reporter
 notifications:
