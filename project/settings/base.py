@@ -1,4 +1,5 @@
 import os
+from django_jinja.builtins import DEFAULT_EXTENSIONS
 
 REPO_DIR = os.path.dirname(
     os.path.dirname(
@@ -64,6 +65,8 @@ TEMPLATES = [
         'APP_DIRS': True,
         "OPTIONS": {
             "match_extension": ".jinja",
+            "extensions": DEFAULT_EXTENSIONS + [
+                "compressor.contrib.jinja2ext.CompressorExtension"],
             "context_processors": [
                 "django.contrib.auth.context_processors.auth",
                 "django.template.context_processors.debug",
@@ -168,11 +171,18 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    os.path.join(REPO_DIR, 'frontend', 'build'),
+# Static files & django-compressor settings (CSS, JavaScript, Images)
+COMPRESS_PRECOMPILERS = (
+    ('text/less', 'lessc {infile} {outfile}'),
+)
+
+STATICFILES_FINDERS = [
+    'compressor.finders.CompressorFinder',
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 ]
+
+STATIC_URL = '/static/'
 PDFPARSER_PATH = os.path.join(REPO_DIR, 'intake', 'pdfparser.jar')
 
 # AWS uploads
